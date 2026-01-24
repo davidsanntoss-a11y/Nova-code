@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>NovaCode</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #0a0a0a;
+      overflow-x: hidden;
+    }
+
+    /* FUNDO FUTURISTA */
+    .background {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: #f4f6f8;
+    }
+
+    .background::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 40s linear infinite;
+    }
+
+    @keyframes gridMove {
+      to { transform: translate(-60px, -60px); }
+    }
+
+    /* BARRA SUPERIOR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(244,246,248,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #0a0a0a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.4rem;
+      transition: 0.3s ease;
+    }
+
+    .back-btn:hover {
+      transform: translateX(-4px);
+    }
+
+    .topbar h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 4rem 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title p {
+      color: #666;
+    }
+
+    /* SERVIÇOS */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: #0f0f12;
+      color: #fff;
+      padding: 2.6rem;
+      border-radius: 26px;
+      transition: 0.4s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-10px) scale(1.03);
+    }
+
+    .service-card p {
+      color: #cfcfcf;
+      margin: 1rem 0 1.6rem;
+    }
+
+    /* CONTATO */
+    .contact {
+      padding: 6rem 2rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .contact-box {
+      background: #0a0a0a;
+      color: #fff;
+      padding: 4rem;
+      border-radius: 30px;
+      text-align: center;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .contact-box p {
+      color: #cfcfcf;
+      margin: 1.2rem 0 2.5rem;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      text-decoration: none;
+      padding: 1rem 2.4rem;
+      border-radius: 999px;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.35s ease;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+    }
+
+    .contact-btn.whatsapp { background: #25D366; }
+    .contact-btn.email { background: #111827; }
+    .contact-btn.instagram {
+      background: linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      color: #777;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<!-- BARRA SUPERIOR -->
+<div class="topbar">
+  <a href="javascript:history.back()" class="back-btn">←</a>
+  <h1>NovaCode</h1>
+</div>
+
+<!-- SERVIÇOS -->
+<section class="container" id="servicos">
+  <div class="section-title">
+    <h2>Serviços</h2>
+    <p>Soluções digitais feitas para crescer negócio</p>
+  </div>
+
+  <div class="services-grid">
+    <div class="service-card">
+      <h3>Site Institucional</h3>
+      <p>Presença profissional para empresas que querem autoridade.</p>
+      <span>A partir de R$ 800</span>
+    </div>
+
+    <div class="service-card">
+      <h3>Landing Page</h3>
+      <p>Páginas focadas em conversão e captação de clientes.</p>
+      <span>A partir de R$ 600</span>
+    </div>
+
+    <div class="service-card">
+      <h3>Site Profissional</h3>
+      <p>Design moderno, animações e performance premium.</p>
+      <span>A partir de R$ 1.200</span>
+    </div>
+  </div>
+</section>
+
+<!-- CONTATO -->
+<section class="contact" id="contato">
+  <div class="contact-box">
+    <h2>Vamos conversar?</h2>
+    <p>Escolha a melhor forma de contato.</p>
+
+    <div class="contact-actions">
+      <a href="#" class="contact-btn whatsapp">WhatsApp</a>
+      <a href="#" class="contact-btn email">Email</a>
+      <a href="#" class="contact-btn instagram">Instagram</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 NovaCode. Todos os direitos reservados.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaCode</title>
+  <meta name="description" content="Agência de desenvolvimento web moderna e profissional.">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- FUNDO FUTURISTA -->
+  <div class="background">
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-container">
+
+      <div class="hero-text animate">
+        <span class="badge">Agência de Desenvolvimento Web</span>
+
+        <h1>
+          NovaCode<br>
+          <strong>Desenvolvimento Web</strong>
+        </h1>
+
+        <p>
+          Criamos sites rápidos, elegantes e focados em conversão
+          para negócios que querem crescer com autoridade.
+        </p>
+
+        <div class="hero-actions">
+          <a href="servicos.html" class="btn primary">Ver serviços</a>
+          <a href="contato.html" class="btn outline">Fale conosco</a>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- PORTFÓLIO -->
+  <section class="container">
+    <div class="section-title animate">
+      <h2>Projetos realizados</h2>
+      <p>Alguns trabalhos recentes desenvolvidos pela NovaCode</p>
+    </div>
+
+    <div class="portfolio-grid">
+      <div class="portfolio-card animate">
+        <h3>Site institucional</h3>
+        <span>Empresa local</span>
+      </div>
+
+      <div class="portfolio-card animate">
+        <h3>Landing page</h3>
+        <span>Alta conversão</span>
+      </div>
+
+      <div class="portfolio-card animate">
+        <h3>Portfólio profissional</h3>
+        <span>Serviços digitais</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © 2026 NovaCode. Todos os direitos reservados.
+  </footer>
+
+  <!-- ANIMAÇÕES -->
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+        }
+      });
+    });
+
+    document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+<div class="background"></div>
+</html>

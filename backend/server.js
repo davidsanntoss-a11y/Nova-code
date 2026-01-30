@@ -10,7 +10,7 @@ app.post('/chat', async (req, res) => {
     try {
         const { message } = req.body;
 
-        // O Ollama roda na porta 11434 por padrão
+        // Aqui chamamos o Phi-3 que está no seu computador
         const response = await axios.post('http://127.0.0.1:11434/api/generate', {
             model: 'phi3', 
             prompt: message,
@@ -20,7 +20,7 @@ app.post('/chat', async (req, res) => {
         res.json({ response: response.data.response });
     } catch (error) {
         console.error("Erro no Ollama:", error.message);
-        res.status(500).json({ error: "A IA local não respondeu. Verifique se o Ollama está aberto." });
+        res.status(500).json({ error: "A IA local não respondeu. Verifique se o Ollama está ativo." });
     }
 });
 

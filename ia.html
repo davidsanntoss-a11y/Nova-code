@@ -176,10 +176,10 @@
   const input = document.getElementById('input');
   const send = document.getElementById('send');
 
-  // === CONFIGURAÇÃO ===
-  // Substitua o link abaixo pelo link que aparece no seu terminal do Ngrok
-  const NGROK_URL = ' https://jaunty-unswelled-madie.ngrok-free.dev'; 
-  const MODEL_NAME = 'minha-ia';
+  // === CONFIGURAÇÃO ATUALIZADA ===
+  const NGROK_URL = 'https://jaunty-unswelled-madie.ngrok-free.dev'; 
+  
+  let messages = [];
 
   function scrollToBottom() {
     chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
@@ -218,22 +218,20 @@
     if (!text) return;
 
     addMessage(text, 'user');
+    messages.push({ role: 'user', content: text });
+    
     input.value = '';
-
     const typing = addTypingMessage();
 
     try {
-      const res = await fetch(`${NGROK_URL}/api/generate`, {
+      const res = await fetch(`${NGROK_URL}/chat`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          
-          'ngrok-skip-browser-warning': 'true' 
+          'ngrok-skip-browser-warning': 'true' // Isso pula o aviso do Ngrok!
         },
-        body: JSON.stringify({ 
-          model: MODEL_NAME, 
-          prompt: text,
-          stream: false
+        body: JSON.stringify({
+          messages: messages
         })
       });
 
@@ -241,8 +239,11 @@
 
       const data = await res.json();
 
+      // Salva a resposta da IA (vinda do server.js) no histórico
+      messages.push(data);
+
       clearInterval(typing.interval);
-      typing.msg.innerHTML = data.response.replace(/\n/g, '<br>');
+      typing.msg.innerHTML = data.content.replace(/\n/g, '<br>');
       scrollToBottom();
 
     } catch (err) {

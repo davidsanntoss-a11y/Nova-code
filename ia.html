@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>NovaCode IA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* RESET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #0a0a0a;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* BACKGROUND GRID */
+    .background {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background: #f4f6f8;
+    }
+
+    .background::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px),
+        linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridMove 40s linear infinite;
+    }
+
+    @keyframes gridMove {
+      to { transform: translate(-60px, -60px); }
+    }
+
+    /* TOPBAR */
+    .topbar {
+      position: sticky;
+      top: 0;
+      background: rgba(244,246,248,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .back-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: #0a0a0a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.4rem;
+    }
+
+    .topbar h1 {
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    /* CHAT */
+    .chat-container {
+      flex: 1;
+      max-width: 900px;
+      width: 100%;
+      margin: auto;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .msg {
+      max-width: 75%;
+      padding: 1rem 1.2rem;
+      border-radius: 18px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      word-break: break-word;
+    }
+
+    .bot {
+      background: #ffffff;
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+
+    .user {
+      background: #0a0a0a;
+      color: #fff;
+      align-self: flex-end;
+      border-bottom-right-radius: 6px;
+    }
+
+    /* INPUT */
+    .input-area {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    textarea {
+      flex: 1;
+      resize: none;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.1);
+      padding: 0.9rem 1.2rem;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    button {
+      background: #0a0a0a;
+      color: #fff;
+      border: none;
+      border-radius: 18px;
+      padding: 0 1.4rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="background"></div>
+
+<div class="topbar">
+  <a href="index.html" class="back-btn">←</a>
+  <h1>NovaCode IA Experimental</h1>
+</div>
+
+<div class="chat-container">
+  <div class="chat" id="chat">
+    <div class="msg bot">
+      Fala 👋<br>
+      Me diz o que você quer criar hoje que eu te ajudo.
+    </div>
+  </div>
+
+  <div class="input-area">
+    <textarea id="input" rows="1" placeholder="Digite sua mensagem..."></textarea>
+    <button id="send">➤</button>
+  </div>
+</div>
+
+<script>
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('input');
+  const send = document.getElementById('send');
+
+  // === CONFIGURAÇÃO ===
+  // Substitua o link abaixo pelo link que aparece no seu terminal do Ngrok
+  const NGROK_URL = '   https://jaunty-unswelled-madie.ngrok-free.dev'; 
+  const MODEL_NAME = 'minha-ia';
+
+  function scrollToBottom() {
+    chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+  }
+
+  function addMessage(text, type) {
+    const msg = document.createElement('div');
+    msg.className = 'msg ' + type;
+    msg.innerText = text;
+    chat.appendChild(msg);
+    scrollToBottom();
+    return msg;
+  }
+
+  function addTypingMessage() {
+    const msg = document.createElement('div');
+    msg.className = 'msg bot';
+    msg.innerHTML = '💬 <span class="dots">⠋</span>';
+    chat.appendChild(msg);
+    scrollToBottom();
+
+    const dots = msg.querySelector('.dots');
+    const chars = ["⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧"];
+    let i = 0;
+
+    const interval = setInterval(() => {
+      dots.textContent = chars[i % chars.length];
+      i++;
+    }, 120);
+
+    return { msg, interval };
+  }
+
+  async function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage(text, 'user');
+    input.value = '';
+
+    const typing = addTypingMessage();
+
+    try {
+      const res = await fetch(`${NGROK_URL}/api/generate`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true' 
+        },
+        body: JSON.stringify({ 
+          model: MODEL_NAME, 
+          prompt: text,
+          stream: false
+        })
+      });
+
+      if (!res.ok) throw new Error('Erro na conexão');
+
+      const data = await res.json();
+
+      clearInterval(typing.interval);
+      typing.msg.innerHTML = data.response.replace(/\n/g, '<br>');
+      scrollToBottom();
+
+    } catch (err) {
+      clearInterval(typing.interval);
+      typing.msg.innerText = 'Erro ao conectar. O Ngrok e a IA estão ativos? 😅';
+      console.error(err);
+    }
+  }
+
+  send.onclick = sendMessage;
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+
+</body>
+</html>

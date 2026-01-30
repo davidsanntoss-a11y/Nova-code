@@ -1,34 +1,30 @@
 const express = require('express');
-const OpenAI = require('openai');
 const cors = require('cors');
-require('dotenv').config();
+const axios = require('axios');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, 
-});
-
-app.get('/', (req, res) => {
-  res.send('O SERVIDOR DA IA ESTÁ ATIVO!');
-});
 app.post('/chat', async (req, res) => {
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: req.body.messages,
-    });
-    res.json(completion.choices[0].message);
-  } catch (error) {
-    console.error("Erro na OpenAI:", error.message);
-    res.status(500).send("Erro ao processar a mensagem");
-  }
+    try {
+        const { message } = req.body;
+
+        // O Ollama roda na porta 11434 por padrão
+        const response = await axios.post('http://127.0.0.1:11434/api/generate', {
+            model: 'phi3', 
+            prompt: message,
+            stream: false
+        });
+
+        res.json({ response: response.data.response });
+    } catch (error) {
+        console.error("Erro no Ollama:", error.message);
+        res.status(500).json({ error: "A IA local não respondeu. Verifique se o Ollama está aberto." });
+    }
 });
 
-// ESTA PARTE É A MAIS IMPORTANTE:
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`✅ Servidor rodando na porta ${PORT}`);
+    console.log(`✅ Servidor rodando na porta ${PORT} com Phi-3 Local!`);
 });

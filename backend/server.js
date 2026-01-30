@@ -11,6 +11,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, 
 });
 
+app.get('/', (req, res) => {
+  res.send('O SERVIDOR DA IA ESTÁ ATIVO!');
+});
 app.post('/chat', async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
